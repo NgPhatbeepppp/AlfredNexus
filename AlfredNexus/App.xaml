@@ -1,0 +1,33 @@
+﻿<Application x:Class="AlfredNexus.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:views="clr-namespace:AlfredNexus.Views"
+             xmlns:viewmodels="clr-namespace:AlfredNexus.ViewModels"
+             StartupUri="MainWindow.xaml">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:CustomColorTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+            <SolidColorBrush x:Key="NavyBackground" Color="#0F1C3A" />
+            <SolidColorBrush x:Key="NavyDark"       Color="#081123" />
+            <SolidColorBrush x:Key="NavyLight"      Color="#1A2B54" />
+
+            <LinearGradientBrush x:Key="AlfredGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+                <GradientStop Color="#0589C2" Offset="0.0"/>
+                <GradientStop Color="#014A6A" Offset="1.0"/>
+            </LinearGradientBrush>
+
+            <DataTemplate DataType="{x:Type viewmodels:ScheduleShutdownViewModel}">
+                <views:ScheduleShutdownView />
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

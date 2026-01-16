@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="AlfredNexus.Views.ScheduleShutdownView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewmodels="clr-namespace:AlfredNexus.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:ScheduleShutdownViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="500">
+
+            <TextBlock Text="{Binding TimerDisplay}" 
+                       FontSize="90" FontWeight="Thin" 
+                       HorizontalAlignment="Center" Foreground="#333"
+                       Margin="0,0,0,40">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <StackPanel Visibility="{Binding IsIdle, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                <ComboBox ItemsSource="{Binding Modes}" 
+                          SelectedItem="{Binding SelectedMode}"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                          materialDesign:HintAssist.Hint="Action Mode"
+                          Width="200" Margin="0,0,0,20" FontSize="16"/>
+
+                <DockPanel Margin="0,0,0,10">
+                    <TextBlock Text="{Binding ElementName=TimeSlider, Path=Value, StringFormat={}{0} min}" 
+                               DockPanel.Dock="Right" Width="60" TextAlignment="Right" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <Slider x:Name="TimeSlider"
+                            Value="{Binding SelectedDuration}" 
+                            Minimum="5" Maximum="180" TickFrequency="5" IsSnapToTickEnabled="True"
+                            Style="{DynamicResource MaterialDesignDiscreteSlider}" 
+                            ToolTip="Slide to set timer"/>
+                </DockPanel>
+                <TextBlock Text="Select Duration" HorizontalAlignment="Center" Opacity="0.5" Margin="0,0,0,30"/>
+            </StackPanel>
+
+            <Button Command="{Binding ToggleTimerCommand}"
+                    Height="60" Width="220"
+                    FontSize="18" FontWeight="Bold"
+                    materialDesign:ButtonAssist.CornerRadius="30">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                        <Setter Property="Content" Value="START TIMER"/>
+
+                        <Setter Property="Background" Value="{DynamicResource AlfredGradientBrush}"/>
+
+                        <Setter Property="BorderThickness" Value="0"/>
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                <Setter Property="Content" Value="CANCEL"/>
+                                <Setter Property="Background" Value="#E53935"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <TextBlock Text="{Binding SelectedMode, StringFormat={}Will {0} computer when timer ends.}" 
+                       HorizontalAlignment="Center" Margin="0,20,0,0" Opacity="0.6" FontStyle="Italic"
+                       Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

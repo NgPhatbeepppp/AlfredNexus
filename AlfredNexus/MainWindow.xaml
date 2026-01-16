@@ -1,0 +1,155 @@
+﻿<Window x:Class="AlfredNexus.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:vm="clr-namespace:AlfredNexus.ViewModels"
+        mc:Ignorable="d"
+        Title="Alfred Nexus" Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#F0F2F5" 
+        FontFamily="{materialDesign:MaterialDesignFont}">
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <LinearGradientBrush x:Key="AlfredGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+            <GradientStop Color="#0589C2" Offset="0.0"/>
+            <GradientStop Color="#014A6A" Offset="1.0"/>
+        </LinearGradientBrush>
+
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="55"/>
+            <Setter Property="Margin" Value="0,8,15,8"/>
+            <Setter Property="Background" Value="{StaticResource AlfredGradientBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="ShadowBorder" CornerRadius="0,20,20,0" Background="Black" Opacity="0.1" Margin="3,3,0,0"/>
+
+                            <Border x:Name="ButtonBorder" 
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="0,20,20,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Source="{TemplateBinding Tag}" 
+                                           Width="22" Height="22" 
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="HighQuality"/>
+
+                                    <TextBlock Text="{TemplateBinding Content}" 
+                                               Grid.Column="1"
+                                               VerticalAlignment="Center"
+                                               FontSize="14" FontWeight="Medium"
+                                               Foreground="White"/>
+                                </Grid>
+
+                                <Border.RenderTransform>
+                                    <TranslateTransform x:Name="MoveTransform" X="0"/>
+                                </Border.RenderTransform>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.95"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="MoveTransform"
+                                                             Storyboard.TargetProperty="X"
+                                                             To="8" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="MoveTransform"
+                                                             Storyboard.TargetProperty="X"
+                                                             To="0" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="White" 
+                CornerRadius="0,30,30,0"
+                Margin="0,0,5,0"
+                Panel.ZIndex="1">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="315" 
+                                  ShadowDepth="5" BlurRadius="20" Opacity="0.15"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,40,0,40" HorizontalAlignment="Center">
+                    <Image Source="pack://application:,,,/Assets/Images/logo.png" 
+                           Width="60" Height="60" Margin="0,0,0,15">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="Source" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+
+                    <TextBlock Text="A L F R E D" FontSize="18" FontWeight="Bold"  HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1">
+                    <Button Style="{StaticResource MenuButtonStyle}" 
+                            Content="Schedule Shutdown"
+                            Tag="pack://application:,,,/Assets/Images/shutdown_icon.png"
+                            Command="{Binding ShowScheduleShutdownViewCommand}"/>
+
+                    <Button Style="{StaticResource MenuButtonStyle}" 
+                            Content="Focus Mode"
+                            Tag="pack://application:,,,/Assets/Images/focus_icon.png"
+                            Command="{Binding ShowFocusModeViewCommand}"/>
+                </StackPanel>
+
+                <Button Grid.Row="2" Margin="30" 
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        ToolTip="Settings">
+                    <materialDesign:PackIcon Kind="CogOutline" Width="28" Height="28" Foreground="#555"/>
+                </Button>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="1" Background="Transparent">
+            <ContentControl Content="{Binding CurrentView}" Margin="40"/>
+        </Border>
+    </Grid>
+</Window>
