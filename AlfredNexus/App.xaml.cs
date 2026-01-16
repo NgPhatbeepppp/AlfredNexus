@@ -22,13 +22,15 @@ namespace AlfredNexus
             var services = new ServiceCollection();
 
             // 1. Đăng ký Services (Logic)
-            // Singleton: Chỉ tạo 1 chú Kiến duy nhất trong suốt vòng đời ứng dụng
             services.AddSingleton<IShutdownService, ShutdownService>();
 
             // 2. Đăng ký ViewModels
             services.AddTransient<MainViewModel>();
-            
-            services.AddTransient<ScheduleShutdownViewModel>(); 
+
+            // [THAY ĐỔI QUAN TRỌNG] 
+            // Đổi từ AddTransient sang AddSingleton.
+            // Việc này đảm bảo ViewModel giữ nguyên trạng thái khi bạn điều hướng qua lại.
+            services.AddSingleton<ScheduleShutdownViewModel>();
 
             return services.BuildServiceProvider();
         }

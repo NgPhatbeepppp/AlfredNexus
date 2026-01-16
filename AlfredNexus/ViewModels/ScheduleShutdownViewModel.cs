@@ -37,6 +37,13 @@ namespace AlfredNexus.ViewModels
             // Đăng ký lắng nghe sự kiện từ Service
             _shutdownService.Tick += OnServiceTick;
             _shutdownService.Completed += OnServiceCompleted;
+
+            if (_shutdownService.IsRunning)
+            {
+                IsRunning = true;
+                // Nếu Service có property CurrentMode hay RemainingTime public thì gán vào đây luôn
+                // Ví dụ: TimerDisplay = _shutdownService.RemainingTime.ToString(...)
+            }
         }
 
         [RelayCommand]
